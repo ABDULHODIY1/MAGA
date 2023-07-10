@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scale Data</title>
+</head>
+<body>
+<div class="scales">
+    <h1>Weight: <span id="weight">-</span></h1>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function updateWeight() {
+                $.ajax({
+                    url: '//read_weightkilogram/',
+                    url: '/kilogram/read_weight/',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var weight = response.weight;
+                        $('#weight').text(weight);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            }
+            setInterval(updateWeight, 1000);
+        });
+
+        function checkEnter(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                var inputElement = document.getElementById("myInput");
+                var weight2 = parseFloat(document.getElementById("weight").textContent);
+                var value = inputElement.value;
+                console.log("Kiritilgan qiymat: " + value);
+                var javob =(value * weight2);
+                console.log(javob);
+                document.getElementById("javob").textContent = "Javob: " + javob;
+            }
+        }
+    </script>
+
+    <label for="myInput">
+        narxi
+    </label>
+    <input id="myInput" placeholder="narxni kiriting" type="number" onkeydown="checkEnter(event)">
+    <div class="javob">
+        <span id="javob"></span>
+    </div>
+    
+</div>
+<span class="dot-0"></span>
+<span class="dot-1"></span>
+</body>
+</html>

@@ -1,0 +1,72 @@
+body{
+    background-color: #212121;
+}
+h1,h2,h3,h4,h5,p,span,label{
+    color: chartreuse;
+}
+
+.scales{
+
+    backdrop-filter: blur(20px);
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate( -50%,-50%,-50%);
+    z-index: 1;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    border: red;
+    /* animation: infinite ease-in 50s;
+    animation-name: for-scale ;
+    animation-delay: 50s; */
+}
+.scales:hover + .dot-0{
+    top: 51%;
+    left: 60%;
+    transition: all 2s ease-in;
+}
+.scales:hover~ .dot-1{
+    top: 40%;
+    left: 50%;
+    transition: all 2s ease-in;
+
+}
+@keyframes for-scale{
+    0%{
+        border: red;
+    }
+    100%{
+        border: greenyellow;
+    }
+}
+.dot-0 {
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    background: linear-gradient(70deg,red,yellow,rgb(255, 111, 0));
+    border-radius: 50%;
+    display: inline-block;
+    top: 40%;
+    left: 50%;
+
+  }
+
+  .dot-1{
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    background: linear-gradient(70deg,red,yellow,rgb(255, 111, 0));
+    border-radius: 50%;
+    display: inline-block;
+    top: 51%;
+    left: 60%;
+  }
+  #myInput{
+    background: none;
+    padding: 5px;
+    border: solid 1px green;
+    border-radius: 20px;
+    color: green;
+  }

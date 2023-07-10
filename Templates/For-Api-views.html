@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>API Example</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <style>
+    .response-container {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <div class="co">
+          <select id="languageSelect" class="form-select">
+            <option value="python">Python</option>
+            <option value="react">React</option>
+            <option value="html">HTML</option>
+          </select>
+          <button id="submitButton" class="btn btn-primary">Submit</button>
+          <div id="responseContainer" class="response-container"></div>
+        </div>
+        <button id="copyButton" class="btn btn-secondary">Copy Code</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+    integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
+    crossorigin="anonymous"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const selectElement = document.getElementById('languageSelect');
+      const submitButton = document.getElementById('submitButton');
+      const responseContainer = document.getElementById('responseContainer');
+      const copyButton = document.getElementById('copyButton');
+
+      submitButton.addEventListener('click', function () {
+        const selectedLanguage = selectElement.value;
+
+        if (selectedLanguage === 'python') {
+          responseContainer.innerHTML = `<pre><code class="language-python">
+from django.http import JsonResponse
+import serial
+import time
+from django.views.generic import *
+
+class Api_codeView(TemplateView):
+    template_name = "For-Api-views.html"
+ser = serial.Serial('/dev/tty.usbserial-1420', 9600, timeout=0)
+
+def read_weight_from_scale():
+    ser.write(b'W\r\n')
+    response = ser.readline()
+    response = response.decode('utf-8').strip()
+
+    if 'kg' in response:
+        weight = response.split(' ')[-2]
+    elif 'g' in response:
+        weight = float(response.split('   ')[-2]) / 1000
+    else:
+        weight = '0'
+
+    return weight
+
+def continuous_weight(request):
+    # if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+    while True:
+        try:
+            weight = read_weight_from_scale()
+            print(f"Vazn: {weight}")
+            response_data = {
+                "status": "success",
+                "data": {
+                    "weight": weight
+                }
+            }
+            return JsonResponse(response_data)
+        except Exception as e:
+            print(f"Xato yuz berdi: {e}")
+            time.sleep(3)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request"})
+
+            </code></pre>`;
+        } else if (selectedLanguage === 'react') {
+          responseContainer.innerHTML = `<pre><code class="language-jsx">
+         import React, { useEffect, useRef, useState } from 'react';
+
+const Scale = () => {
+  const [weight, setWeight] = useState('0');
+  const [count, setCount] = useState(0);
+  const timerId = useRef();
+
+  const getWeight = () => {
+    fetch('http://localhost:8000/Apis/api/usb-ports/')
+      .then((res) => res.json())
+      .then((res) => {
+        setWeight(res.data.weight);
+        console.log(res.data.weight)
+      });
+  };
+
+  useEffect(() => {
+    timerId.current = setInterval(() => {
+      setCount((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timerId.current);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    getWeight();
+
+    // eslint-disable-next-line
+  }, [count]);
+
+  return <div>Message: {weight}</div>;
+};
+
+export default Scale;</code></pre>`;
+        } else if (selectedLanguage === 'html') {
+          responseContainer.innerHTML = `<pre><code class="language-jsx">
+            &lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Scale Data&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="scales"&gt;
+    &lt;h1&gt;Weight: &lt;span id="weight"&gt;-&lt;/span&gt;&lt;/h1&gt;
+
+    &lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        $(document).ready(function() {
+            function updateWeight() {
+                $.ajax({
+                    url: '/Apis/api/usb-ports/',
+                    url: '/Apis/api/usb-ports/',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var weight = response.weight;
+                        $('#weight').text(weight);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            }
+            setInterval(updateWeight, 1000);
+        });
+
+        function checkEnter(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                var inputElement = document.getElementById("myInput");
+                var weight2 = parseFloat(document.getElementById("weight").textContent);
+                var value = inputElement.value;
+                console.log("Kiritilgan qiymat: " + value);
+                var javob =(value * weight2);
+                console.log(javob);
+                document.getElementById("javob").textContent = "Javob: " + javob;
+            }
+        }
+    &lt;/script&gt;
+
+    &lt;label for="myInput"&gt;
+        narxi
+    &lt;/label&gt;
+    &lt;input id="myInput" placeholder="narxni kiriting" type="number" onkeydown="checkEnter(event)"&gt;
+    &lt;div class="javob"&gt;
+        &lt;span id="javob"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    
+&lt;/div&gt;
+&lt;span class="dot-0"&gt;&lt;/span&gt;
+&lt;span class="dot-1"&gt;&lt;/span&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+            </code></pre>`;
+        }
+
+        Prism.highlightAll();
+      });
+
+      copyButton.addEventListener('click', function () {
+        const codeElement = responseContainer.querySelector('code');
+        const codeText = codeElement.innerText;
+
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        alert('Code copied to clipboard!');
+      });
+    });
+  </script>
+<h1>
+  majbury js bu js ni appingizga qo`shing qoshing
+</h1>
+<pre>
+  <code class="language-js">
+    document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.getElementById('usbButton');
+  btn.addEventListener('click', function() {
+    chrome.permissions.request({permissions: ['serial']}, function(granted) {
+      if (granted) {
+        chrome.serial.getDevices(function(ports) {
+          var usbList = document.getElementById('usbList');
+          usbList.innerHTML = '';
+
+          ports.forEach(function(port) {
+            var listItem = document.createElement('li');
+            listItem.innerText = 'Device: ' + port.path + ', Manufacturer: ' + port.vendorId;
+            usbList.appendChild(listItem);
+          });
+        });
+      }
+    });
+  });
+});
+
+  </code>
+</pre>
+<div class="api" style="border:solid red 2px; border-radius:5px; background: rgb(0,247,255); width:fit-content; padding:0; margin:0;">
+  <h5 id="api-get" style="color:white">
+    <label for="api-get" style="color:white; border-right:solid 2px; ">GET:</label>
+    http://localhost:8000/Apis/api/usb-ports/
+  </h5>
+</div>
+<script>
+        copyButton.addEventListener('click', function () {
+        const codeElement = responseContainer.querySelector('h5');
+        const codeText = codeElement.innerText;
+
+        const textarea = document.createElement('textarea');
+        textarea.value = codeText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        alert('Code copied to clipboard!');
+      });
+    });
+</script>
+</body>
+
+</html>
